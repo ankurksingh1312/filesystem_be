@@ -6,6 +6,10 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import itemRoutes from './routes/itemRoutes';
 import folderRoutes from './routes/folderRoutes';
+import filesystem from './routes/filesystem';
+
+
+import Item from './models/Item';
 
 dotenv.config();
 
@@ -34,21 +38,23 @@ mongoose.connect(uri)
   });
 
 // Routes
-app.use('/api/items', itemRoutes);
-app.use('/api/folders', folderRoutes);
+// app.use('/api/items', itemRoutes);
+// app.use('/api/folders', folderRoutes);
+app.use('/api/filesystem', filesystem);
+
 
 // Socket.IO connection handling
 io.on('connection', (socket) => {
   console.log('Client connected socket');
 
-  socket.on('itemUpdated', (data) => {
-    console.log('# received itemUpdated, now broadcasting it',data);
-    socket.broadcast.emit('itemUpdate', data);
-  });
+  // socket.on('itemUpdated', (data) => {
+  //   console.log('# received itemUpdated, now broadcasting it',data);
+  //   socket.broadcast.emit('itemUpdate', data);
+  // });
 
-  socket.on('folderUpdated', (data) => {
-    console.log('# received folderUpdated, now broadcasting it',data);
-    socket.broadcast.emit('folderUpdate', data);
+  socket.on('filesNfolderUpdated', (data) => {
+    console.log('# received filesNfolderUpdated, now broadcasting it',data);
+    socket.broadcast.emit('filesNfolderUpdate', data);
   });
 
   socket.on('disconnect', () => {
@@ -60,3 +66,5 @@ const PORT = process.env.PORT || 5000;
 httpServer.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 }); 
+
+
