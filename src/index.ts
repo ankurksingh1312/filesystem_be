@@ -7,8 +7,6 @@ import dotenv from 'dotenv';
 import itemRoutes from './routes/itemRoutes';
 import folderRoutes from './routes/folderRoutes';
 import filesystem from './routes/filesystem';
-
-
 import Item from './models/Item';
 
 dotenv.config();
@@ -37,28 +35,15 @@ mongoose.connect(uri)
     console.error('Error connecting to MongoDB:', err);
   });
 
-// Routes
-// app.use('/api/items', itemRoutes);
-// app.use('/api/folders', folderRoutes);
 app.use('/api/filesystem', filesystem);
 
 
-// Socket.IO connection handling
 io.on('connection', (socket) => {
-  console.log('Client connected socket');
-
-  // socket.on('itemUpdated', (data) => {
-  //   console.log('# received itemUpdated, now broadcasting it',data);
-  //   socket.broadcast.emit('itemUpdate', data);
-  // });
+  console.log('Client connected socket', socket.id);
 
   socket.on('filesNfolderUpdated', (data) => {
-    console.log('# received filesNfolderUpdated, now broadcasting it',data);
-    socket.broadcast.emit('filesNfolderUpdate', data);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('-------Client disconnected');
+    console.log('# received filesNfolderUpdated from', socket.id, data);
+    io.emit('filesNfolderUpdate', data);
   });
 });
 

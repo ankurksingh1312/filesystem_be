@@ -24,6 +24,11 @@ const FileSystemSchema = new Schema({
       type: String,
       required: true
     },
+    isOpen:{
+        type:Boolean,
+        required:true,
+        default:false
+    },
     children: {
       type: [{
         type: {
@@ -38,7 +43,11 @@ const FileSystemSchema = new Schema({
         icon: {
           type: String,
           required: true
-        }
+        },
+        isOpen:{
+            type:Boolean,
+            default:false
+        },
       }],
       default: null
     }
